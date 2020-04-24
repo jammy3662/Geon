@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="03731e24-8985-400c-8812-7795f3684dae" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="1aPcpoR6ScRqyHJsxq03VmCUZw9" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/scenes" />
+      <recent name="$PROJECT_DIR$/classes" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="03731e24-8985-400c-8812-7795f3684dae" name="Default Changelist" comment="" />
+      <created>1586640854938</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1586640854938</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="417" y="207" key="#Other_File_Types" timestamp="1586652995864">
+      <screen x="62" y="23" width="2818" height="1597" />
+    </state>
+    <state x="417" y="207" key="#Other_File_Types/62.23.2818.1597@62.23.2818.1597" timestamp="1586652995864" />
+    <state x="513" y="753" key="#Project_Structure" timestamp="1586640863735">
+      <screen x="62" y="23" width="2818" height="1597" />
+    </state>
+    <state x="513" y="753" key="#Project_Structure/62.23.2818.1597@62.23.2818.1597" timestamp="1586640863735" />
+    <state x="0" y="23" key="FileDocumentManager.FileCacheConflict" timestamp="1586814983995">
+      <screen x="0" y="23" width="2880" height="1597" />
+    </state>
+    <state x="0" y="23" key="FileDocumentManager.FileCacheConflict/0.23.2880.1597@0.23.2880.1597" timestamp="1586814983995" />
+    <state x="61" y="23" key="FileDocumentManager.FileCacheConflict/61.23.2819.1597@61.23.2819.1597" timestamp="1586662958855" />
+    <state x="62" y="23" key="FileDocumentManager.FileCacheConflict/62.23.2818.1597@62.23.2818.1597" timestamp="1586653150764" />
+    <state x="106" y="860" key="SettingsEditor" timestamp="1586751459349">
+      <screen x="0" y="23" width="2880" height="1597" />
+    </state>
+    <state x="106" y="860" key="SettingsEditor/0.23.2880.1597@0.23.2880.1597" timestamp="1586751459349" />
+    <state x="166" y="860" key="SettingsEditor/62.23.2818.1597@62.23.2818.1597" timestamp="1586652987487" />
+    <state x="531" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1586814733465">
+      <screen x="0" y="23" width="2880" height="1597" />
+    </state>
+    <state x="531" y="413" key="com.intellij.ide.util.TipDialog/0.23.2880.1597@0.23.2880.1597" timestamp="1586814733465" />
+    <state x="577" y="413" key="com.intellij.ide.util.TipDialog/56.23.2824.1597@56.23.2824.1597" timestamp="1586642212146" />
+    <state x="581" y="413" key="com.intellij.ide.util.TipDialog/61.23.2819.1597@61.23.2819.1597" timestamp="1586723062026" />
+  </component>
+</project>
