@@ -5,4 +5,4 @@
 
 
 # Setup
- A tutorial on how to initally set up Github Desktop can be found [here](https://github.com/GitHubCenterCore/Centercore/wiki/Github-Desktop---Installation,-Setup,-and-Usage)and a guide to accessing a repository can be found [here.](https://github.com/GitHubCenterCore/Centercore/wiki/Accessing-an-existing-repo)
+ A tutorial on how to initally set up Github Desktop can be found [here ](https://github.com/GitHubCenterCore/Centercore/wiki/Github-Desktop---Installation,-Setup,-and-Usage)and a guide to accessing a repository can be found [here.](https://github.com/GitHubCenterCore/Centercore/wiki/Accessing-an-existing-repo)
