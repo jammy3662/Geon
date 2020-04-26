@@ -21,11 +21,11 @@ func fall():
 			fall -= fallspeed
 		if fall < -gravity:
 			fall = -gravity
-		self.linear_velocity.y += fall
+		self.linear_velocity.y = fall
 
 func jumpmove():
 	if jump < jumpamp:
-		jump += fallspeed * 10
+		jump += fallspeed
 		self.linear_velocity.y += jump
 	if jump > jumpamp or jump == jumpamp:
 		jump = jumpamp

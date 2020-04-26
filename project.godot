@@ -24,17 +24,17 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://classes/level.gd"
 }, {
-"base": "Spatial",
+"base": "RigidBody",
 "class": "Orb",
 "language": "GDScript",
 "path": "res://classes/orb.gd"
 }, {
-"base": "Spatial",
+"base": "RigidBody",
 "class": "Player",
 "language": "GDScript",
 "path": "res://classes/player.gd"
 }, {
-"base": "MeshInstance",
+"base": "RigidBody",
 "class": "gsphere",
 "language": "GDScript",
 "path": "res://classes/gsphere.gd"
@@ -127,6 +127,9 @@ ui_run={
 3d_physics/layer_6="monitor"
 3d_physics/layer_7="gsurface"
 3d_physics/layer_8="ggun"
+3d_physics/layer_9="gsphere"
+3d_physics/layer_10="gplate"
+3d_physics/layer_11="area"
 
 [rendering]
 

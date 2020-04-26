@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://classes/orb.gd" type="Script" id=1]
 [ext_resource path="res://particles/orb.material" type="Material" id=2]
@@ -10,6 +10,7 @@ radius = 0.5
 height = 1.0
 
 [sub_resource type="SphereShape" id=2]
+radius = 0.41119
 
 [sub_resource type="ParticlesMaterial" id=3]
 emission_shape = 1
@@ -22,38 +23,29 @@ linear_accel_random = 1.0
 radial_accel_random = 1.0
 color = Color( 0, 1, 0, 1 )
 
-[node name="orb" type="Spatial"]
+[sub_resource type="SphereShape" id=4]
+radius = 2.0
+
+[node name="orb" type="RigidBody"]
+collision_layer = 2
+collision_mask = 253
+mode = 3
+gravity_scale = 0.0
+continuous_cd = true
+can_sleep = false
 script = ExtResource( 1 )
 
-[node name="orb" type="RigidBody" parent="."]
-collision_layer = 2
-collision_mask = 255
-mode = 2
-gravity_scale = 0.0
-
-[node name="OmniLight" type="OmniLight" parent="orb"]
-light_color = Color( 0, 1, 0, 1 )
-light_energy = 10.0
-omni_range = 3.00194
-
-[node name="MeshInstance" type="MeshInstance" parent="orb"]
+[node name="mesh" type="MeshInstance" parent="."]
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
 mesh = SubResource( 1 )
 material/0 = null
 
-[node name="CollisionShape" type="CollisionShape" parent="orb"]
-transform = Transform( 0.2625, 0, 0, 0, 0.2625, 0, 0, 0, 0.2625, 0, 0, 0 )
+[node name="shape" type="CollisionShape" parent="."]
 shape = SubResource( 2 )
 
-[node name="SpotLight" type="SpotLight" parent="orb"]
-transform = Transform( 1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 0, 0 )
-light_color = Color( 0, 1, 0, 1 )
-light_energy = 10.0
-spot_range = 100.0
-spot_angle = 12.0
-
-[node name="Particles" type="Particles" parent="orb"]
+[node name="particles" type="Particles" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0151356, -0.0552192, -0.0362979 )
+visible = false
 emitting = false
 amount = 12
 lifetime = 0.05
@@ -65,5 +57,13 @@ draw_pass_1 = ExtResource( 3 )
 draw_pass_2 = ExtResource( 3 )
 draw_pass_3 = ExtResource( 3 )
 draw_pass_4 = ExtResource( 3 )
-[connection signal="body_entered" from="orb" to="." method="_body_entered"]
-[connection signal="body_exited" from="orb" to="." method="_body_exited"]
+
+[node name="oradius" type="Area" parent="."]
+collision_layer = 1024
+collision_mask = 1024
+
+[node name="shape" type="CollisionShape" parent="oradius"]
+shape = SubResource( 4 )
+[connection signal="body_entered" from="." to="." method="_body_entered"]
+[connection signal="body_exited" from="." to="." method="_body_exited"]
+[connection signal="area_entered" from="oradius" to="." method="_area_entered"]

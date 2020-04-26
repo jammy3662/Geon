@@ -16,5 +16,5 @@ func _ready():
 
 func _process(delta):
 	if self.player != null:
-		if player.body.global_transform.origin.y < deathplane:
+		if player.global_transform.origin.y < deathplane:
 			player.respawn(Vector3(spawnx,spawny,spawnz))
