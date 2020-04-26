@@ -18,6 +18,7 @@ export var gravity: float
 export var fallspeed: float
 var fall: float
 
+# the camera
 var camera: Camera
 var gun: Spatial
 
