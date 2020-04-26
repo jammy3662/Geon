@@ -52,23 +52,17 @@ _global_script_class_icons={
 
 config/name="Geon"
 run/main_scene="res://scenes/menus/titlescreen.tscn"
-config/icon="res://icon.png"
+config/icon="res://Geon Crilicore Icon.png"
 
 [autoload]
 
 LocalData="res://classes/local_data.gd"
-UserData="*res://addons/github-integration/scripts/user_data.gd"
-IconLoaderGithub="*res://addons/github-integration/scripts/IconLoaderGithub.gd"
 
 [display]
 
 window/size/width=1280
 window/size/height=720
 window/size/resizable=false
-
-[editor_plugins]
-
-enabled=PoolStringArray( "github-integration" )
 
 [input]
 

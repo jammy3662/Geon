@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://classes/titlescreen.gd" type="Script" id=1]
 [ext_resource path="res://font/Andale Mono.ttf" type="DynamicFontData" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://classes/options_title.gd" type="Script" id=6]
 [ext_resource path="res://classes/credits_title.gd" type="Script" id=7]
 [ext_resource path="res://classes/quit_title.gd" type="Script" id=8]
+[ext_resource path="res://Geon Crilicore Icon.png" type="Texture" id=9]
 
 [sub_resource type="DynamicFont" id=1]
 size = 84
@@ -42,7 +43,6 @@ __meta__ = {
 }
 
 [node name="WindowDialog" type="WindowDialog" parent="."]
-visible = true
 margin_left = 52.0
 margin_top = 167.0
 margin_right = 1236.0
@@ -180,3 +180,8 @@ margin_right = 1260.0
 margin_bottom = 700.0
 custom_fonts/font = SubResource( 3 )
 text = "Copyright Ingenuity 2020."
+
+[node name="Geon Crilicore Icon" type="Sprite" parent="."]
+position = Vector2( 182, 90 )
+scale = Vector2( 0.0522461, 0.0522461 )
+texture = ExtResource( 9 )
