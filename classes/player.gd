@@ -8,9 +8,9 @@ var vel: Vector3
 var maxvelh: float = 100
 var maxvelv: float = 100
 
-var speed: float = 30
-var damp: float = 100
-var jumpheight: float = 4
+export var speed: float = 30
+export var damp: float = 100
+export var jumpheight: float = 4
 
 export var useinitial: bool = false
 export var initial: float
@@ -22,10 +22,10 @@ var fall: float
 var camera: Camera
 var gun: Spatial
 
-var polarity: bool = true
+var polarity: int = 0
 var currentorb: Orb = null
 
-var jumped: bool = false
+var grounded: bool = false
 var paused: bool = false
 var pull: bool = false
 var gravityaffected: bool = true
@@ -33,17 +33,9 @@ var movementenabled: bool = true
 
 var mousey: int
 
-func angle_and_dist(pt1: Vector3, pt2: Vector3):
-	var dist = pt2 - pt1
-	var flatdist = sqrt(pow(dist.x,2) + pow(dist.z,2))
-	var updist = sqrt(pow(flatdist, 2) + pow(dist.y, 2))
-	var averagedist = (flatdist + updist) / 2
-	var flatangle = atan(dist.x/dist.z)
-	var upangle = atan(dist.y/flatdist)
-	return [flatangle, upangle, averagedist]
-
 func respawn(point):
 	global_transform.origin = point
+	grounded = false
 	if currentorb != null:
 		currentorb.despawn()
 		currentorb = null
@@ -60,6 +52,7 @@ func _ready():
 	pass
 	
 func contactedorb():
+	print(pull)
 	if pull == true:
 		pull = false
 		gravityaffected = true
@@ -75,14 +68,14 @@ func _body_entered(body):
 		contactedorb()
 		pass
 	if body.name == "floor":
-		jumped = false
+		grounded = true
 	if body.name == "hazard":
 		# code for die
 		pass
 
 func _body_exited(body):
 	if body.name == "floor":
-		jumped = true
+		grounded = false
 
 func createorb():
 	var rot = camera.rotation
@@ -115,7 +108,7 @@ func jump():
 
 func warp():
 	if currentorb != null:
-		jumped = true
+		grounded = false
 		currentorb.stop()
 		global_transform.origin = currentorb.global_transform.origin
 		
@@ -124,13 +117,19 @@ func pull():
 		if currentorb != null:
 			if currentorb.shot == true:
 				pull = true
+				grounded = false
 				var orbp = currentorb.global_transform.origin
 				self.camera.look_at(orbp, Vector3(0,1,0))
 				var zbasis = camera.global_transform.basis.z
 				zbasis *= -1
 				vel = zbasis
 				movementenabled = false
-			
+				
+func pullupdate():
+	if pull == true:
+		self.camera.look_at(currentorb.global_transform.origin, Vector3(0,1,0))
+		vel = -camera.global_transform.basis.z
+		movementenabled = false
 
 func movement():
 	if movementenabled:
@@ -156,11 +155,12 @@ func movement():
 		
 
 func gravity():
-	if fall > -gravity:
-		fall -= fallspeed * speed
-	if fall < -gravity:
-		fall = -gravity
-	#vel.y = -fall
+	if grounded == false:
+		if fall > -gravity:
+			fall -= fallspeed * speed
+		if fall < -gravity:
+			fall = -gravity
+		vel.y = fall / speed
 	pass
 
 func controls(event: InputEvent):
@@ -171,14 +171,14 @@ func controls(event: InputEvent):
 			self.pull()
 	if event is InputEventKey:
 		if event.is_action_pressed("ui_a"):
-			if jumped == false:
-				jumped = true
+			if grounded == true:
+				grounded = false
 				jump()
 		if event.is_action_pressed("ui_run"):
-			if polarity == true:
-				polarity = false
-			else: 
-				polarity = true
+			if polarity < 2:
+				polarity += 1
+			else:
+				polarity = 0
 
 	if event is InputEventMouseMotion:
 		var mousesens: float = 0.008
@@ -216,6 +216,7 @@ func _unhandled_input(event):
 
 func _integrate_forces(state):
 	if currentorb != null:
+		pullupdate()
 		if currentorb.get_parent() != null:
 			currentorb.callpt = global_transform.origin
 			orbdist = currentorb.global_transform.origin - global_transform.origin

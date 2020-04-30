@@ -1,26 +1,25 @@
-extends MeshInstance
+extends RigidBody
 class_name GoalMonitor
 
 # must be set or app will crash when monitor is activated!
 export var nextscnpath: String = ""
-var body: RigidBody
 
 func loadnext(player: Player):
+	var scnpath = "res://" + nextscnpath
 	get_tree().change_scene(nextscnpath)
 
 func activate(player: Player):
 	# add code for save game and/or additional menus here
-	player.paused = true
+	player.pause = true
 	self.loadnext(player)
 
 func _ready():
-	self.body = self.get_node("monitor")
-	self.body.contact_monitor = true
-	self.body.contacts_reported = true
+	contact_monitor = true
+	contacts_reported = 2
 	
 func _body_entered(body):
-	print(body.collision_mask)
-	if body.collision_mask == 1:
+	print(body.name)
+	if body.name == "player":
 		self.activate(body.get_parent())
 
 

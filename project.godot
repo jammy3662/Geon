@@ -14,7 +14,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://classes/DynamicBody.gd"
 }, {
-"base": "MeshInstance",
+"base": "RigidBody",
 "class": "GoalMonitor",
 "language": "GDScript",
 "path": "res://classes/goal_monitor.gd"
@@ -38,6 +38,11 @@ _global_script_classes=[ {
 "class": "gsphere",
 "language": "GDScript",
 "path": "res://classes/gsphere.gd"
+}, {
+"base": "RigidBody",
+"class": "temp_player",
+"language": "GDScript",
+"path": "res://temp_player.gd"
 } ]
 _global_script_class_icons={
 "DynamicBody": "",
@@ -45,14 +50,15 @@ _global_script_class_icons={
 "Level": "",
 "Orb": "",
 "Player": "",
-"gsphere": ""
+"gsphere": "",
+"temp_player": ""
 }
 
 [application]
 
 config/name="Geon"
 run/main_scene="res://scenes/menus/titlescreen.tscn"
-config/icon="res://Geon Crilicore Icon.png"
+config/icon="res://Geon Crilicore Icon2.png"
 
 [autoload]
 
