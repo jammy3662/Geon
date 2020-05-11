@@ -1,0 +1,150 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://classes/pause_menu.gd" type="Script" id=1]
+[ext_resource path="res://font/Andale Mono.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://scenes/menus/options_menu.tscn" type="PackedScene" id=3]
+
+[sub_resource type="DynamicFont" id=2]
+size = 36
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=1]
+size = 23
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 30
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 24
+font_data = ExtResource( 2 )
+
+[node name="pause_menu" type="Control"]
+pause_mode = 2
+margin_right = 1280.0
+margin_bottom = 720.0
+script = ExtResource( 1 )
+
+[node name="dimmer" type="ColorRect" parent="."]
+margin_right = 1280.0
+margin_bottom = 720.0
+color = Color( 0, 0, 0, 0.823529 )
+
+[node name="panel" type="Panel" parent="."]
+margin_left = 539.0
+margin_top = 201.0
+margin_right = 739.0
+margin_bottom = 521.0
+
+[node name="pause_label" type="Label" parent="panel"]
+margin_left = 30.0
+margin_top = 10.0
+margin_right = 162.0
+margin_bottom = 51.0
+custom_fonts/font = SubResource( 2 )
+text = "Paused"
+
+[node name="continue" type="Button" parent="panel"]
+margin_left = 29.0
+margin_top = 63.0
+margin_right = 167.0
+margin_bottom = 96.0
+custom_fonts/font = SubResource( 1 )
+text = "Continue"
+
+[node name="options" type="Button" parent="panel"]
+margin_left = 29.0
+margin_top = 111.0
+margin_right = 167.0
+margin_bottom = 144.0
+custom_fonts/font = SubResource( 1 )
+text = "Options"
+
+[node name="save" type="Button" parent="panel"]
+margin_left = 29.0
+margin_top = 159.0
+margin_right = 167.0
+margin_bottom = 192.0
+custom_fonts/font = SubResource( 1 )
+text = "Save"
+
+[node name="load" type="Button" parent="panel"]
+margin_left = 29.0
+margin_top = 207.0
+margin_right = 167.0
+margin_bottom = 240.0
+custom_fonts/font = SubResource( 1 )
+text = "Load"
+
+[node name="menu" type="Button" parent="panel"]
+margin_left = 29.0
+margin_top = 255.0
+margin_right = 167.0
+margin_bottom = 288.0
+custom_fonts/font = SubResource( 1 )
+text = "Quit"
+
+[node name="confirm_panel" type="Panel" parent="panel/menu"]
+visible = false
+margin_left = -69.0
+margin_top = -200.0
+margin_right = 211.0
+margin_bottom = 56.0
+
+[node name="dimmer" type="ColorRect" parent="panel/menu/confirm_panel"]
+show_behind_parent = true
+margin_left = 39.0
+margin_top = -56.0
+margin_right = 240.0
+margin_bottom = 265.0
+color = Color( 0, 0, 0, 0.823529 )
+
+[node name="quit_label" type="Label" parent="panel/menu/confirm_panel"]
+margin_left = 23.0
+margin_top = 12.0
+margin_right = 257.0
+margin_bottom = 47.0
+custom_fonts/font = SubResource( 3 )
+text = "Quit to menu?"
+
+[node name="saveandquit" type="Button" parent="panel/menu/confirm_panel"]
+margin_left = 40.0
+margin_top = 76.0
+margin_right = 238.0
+margin_bottom = 110.0
+custom_fonts/font = SubResource( 4 )
+text = "Save & Quit"
+
+[node name="quit" type="Button" parent="panel/menu/confirm_panel"]
+margin_left = 40.0
+margin_top = 136.0
+margin_right = 238.0
+margin_bottom = 170.0
+custom_fonts/font = SubResource( 4 )
+text = "Quit Now"
+
+[node name="cancel" type="Button" parent="panel/menu/confirm_panel"]
+margin_left = 40.0
+margin_top = 196.0
+margin_right = 238.0
+margin_bottom = 230.0
+custom_fonts/font = SubResource( 4 )
+text = "Cancel"
+
+[node name="options_menu" parent="." instance=ExtResource( 3 )]
+editor/display_folded = true
+
+[node name="sfxvol" parent="options_menu/TabContainer/Audio" index="0"]
+ticks_on_borders = true
+[connection signal="button_up" from="panel/continue" to="." method="continue_up"]
+[connection signal="pressed" from="panel/continue" to="." method="continue_pressed"]
+[connection signal="button_up" from="panel/options" to="." method="options_up"]
+[connection signal="pressed" from="panel/options" to="." method="options_pressed"]
+[connection signal="button_up" from="panel/menu" to="." method="menu_up"]
+[connection signal="pressed" from="panel/menu" to="." method="menu_pressed"]
+[connection signal="pressed" from="panel/menu/confirm_panel/quit" to="." method="quit_pressed"]
+[connection signal="button_up" from="panel/menu/confirm_panel/cancel" to="." method="quit_cancel_up"]
+[connection signal="pressed" from="panel/menu/confirm_panel/cancel" to="." method="quit_cancel_pressed"]
+
+[editable path="options_menu"]

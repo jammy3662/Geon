@@ -32,6 +32,8 @@ var orb: Orb
 var carrying: Spatial
 var pickarea: Area
 var pnlabel: Label
+var hud: Control
+var pause_menu: Control
 var contacting: Array = []
 
 # current polarity:
@@ -58,6 +60,8 @@ func _ready():
 	self.orb = load("res://scenes/entities/orb.tscn").instance()
 	self.pickarea = $pickarea
 	self.pnlabel = $hud/pn
+	self.hud = $hud
+	self.pause_menu = $pause_menu
 	var pt = self.global_transform.origin
 	pt.y -= scale.y / 2
 	body_bottom = pt
@@ -66,6 +70,15 @@ func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	pass
 	
+
+func pause(p: bool):
+	if p: Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	else: 
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	get_tree().paused = p
+	pause_menu.visible = p
+	self.pause = p
+
 func reparent(node: Node, new: Node):
 	var par = node.get_parent()
 	par.remove_child(node)
@@ -185,28 +198,32 @@ func _unhandled_input(event):
 	if !pause: controls(event)
 	if event is InputEventKey:
 		if event.is_action_pressed("ui_pause"):
-			if !pause:
-				pause = true
-				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			if !self.pause:
+				print("pause")
+				pause(true)
+				pass
 			else:
-				pause = false
-				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+				print("play")
+				pause(false)
+				pass
 
 func _integrate_forces(state):
-	if carrying != null:
-		var trans = camera.transform.basis.z
-		trans.y *= -1
-		carrying.translation = self.transform.origin + trans * 3
-		carrying.translation.y += camera.translation.y
-	global_position_delta = state.transform.origin - current_global_position
-	current_global_position = state.transform.origin
-	body_bottom = Vector3(self.global_transform.origin.z, self.global_transform.origin.y - self.scale.y / 2, self.global_transform.origin.z)
-	state.linear_velocity = inputvel + + gravity + vel
-	if current_global_position.y < lvl.deathplane:
-		respawn()
+	if !pause:
+		if carrying != null:
+			var trans = camera.transform.basis.z
+			trans.y *= -1
+			carrying.translation = self.transform.origin + trans * 3
+			carrying.translation.y += camera.translation.y
+		global_position_delta = state.transform.origin - current_global_position
+		current_global_position = state.transform.origin
+		body_bottom = Vector3(self.global_transform.origin.z, self.global_transform.origin.y - self.scale.y / 2, self.global_transform.origin.z)
+		state.linear_velocity = inputvel + + gravity + vel
+		if current_global_position.y < lvl.deathplane:
+			respawn()
 
 func _process(delta):
-	inputvel()
-	gravity()
+	if !pause:
+		inputvel()
+		gravity()
 	pass
 
