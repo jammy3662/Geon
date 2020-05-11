@@ -1,28 +1,37 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://temp_player.gd" type="Script" id=1]
+[ext_resource path="res://classes/player.gd" type="Script" id=1]
 [ext_resource path="res://textures/crosshair.png" type="Texture" id=2]
-[ext_resource path="res://scenes/entities/gun.tscn" type="PackedScene" id=3]
+[ext_resource path="res://font/Andale Mono.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://scenes/entities/gun.tscn" type="PackedScene" id=4]
 
-[sub_resource type="SphereShape" id=1]
+[sub_resource type="PhysicsMaterial" id=1]
+friction = 0.0
+
+[sub_resource type="DynamicFont" id=5]
+size = 29
+font_data = ExtResource( 3 )
 
 [sub_resource type="BoxShape" id=2]
+margin = 0.001
 extents = Vector3( 0.7, 1.7, 0.7 )
 
 [sub_resource type="CubeMesh" id=3]
-size = Vector3( 2, 4, 2 )
+size = Vector3( 1.7, 4, 1.7 )
+
+[sub_resource type="BoxShape" id=4]
+extents = Vector3( 0.7, 1.7, 0.8 )
 
 [node name="player" type="RigidBody"]
 transform = Transform( -1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 0, 0 )
-collision_mask = 126
+collision_mask = 638
 mode = 2
+physics_material_override = SubResource( 1 )
 gravity_scale = 0.0
 continuous_cd = true
 contacts_reported = 2
 can_sleep = false
 script = ExtResource( 1 )
-inputspeed = 6.0
-gravityspeed = 10.0
 
 [node name="hud" type="Control" parent="."]
 margin_right = 1280.0
@@ -34,22 +43,21 @@ position = Vector2( 640, 360 )
 scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 2 )
 
+[node name="pn" type="Label" parent="hud"]
+margin_left = 30.0
+margin_top = 20.0
+margin_right = 86.0
+margin_bottom = 34.0
+custom_fonts/font = SubResource( 5 )
+text = "polarity: "
+
 [node name="camera" type="Camera" parent="."]
-transform = Transform( 1, 0, -1.42109e-14, 0, 1, 0, 1.42109e-14, 0, 1, 0, 1, 0 )
+transform = Transform( 1, 0, -1.42109e-14, 0, 1, 0, 1.42109e-14, 0, 1, 0, 1.5, 0 )
 current = true
+fov = 80.0
 
-[node name="pradius" type="Area" parent="camera"]
-editor/display_folded = true
-transform = Transform( 1, 0, 1.42109e-14, 0, 1, 0, -1.42109e-14, 0, 1, -2.84217e-14, -1, -1.75 )
-visible = false
-collision_layer = 1024
-collision_mask = 1024
-
-[node name="CollisionShape" type="CollisionShape" parent="camera/pradius"]
-shape = SubResource( 1 )
-
-[node name="gun" parent="camera" instance=ExtResource( 3 )]
-transform = Transform( 0.0776457, 0, -0.289778, 0, 0.3, 0, 0.289778, 0, 0.0776457, 0.75, -0.5, -0.5 )
+[node name="gun" parent="camera" instance=ExtResource( 4 )]
+transform = Transform( 0.0517638, 0, -0.193185, 0, 0.2, 0, 0.193185, 0, 0.0517638, 0.620591, -0.75, -0.982963 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, -1.42109e-14, 0, 1, 0, 1.42109e-14, 0, 1, 0, 0, 0 )
@@ -61,5 +69,18 @@ visible = false
 mesh = SubResource( 3 )
 skeleton = NodePath("")
 material/0 = null
+
+[node name="pickarea" type="Area" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.5 )
+gravity_vec = Vector3( 0, 0, 0 )
+linear_damp = 0.0
+angular_damp = 0.0
+priority = 1.0
+collision_mask = 256
+
+[node name="CollisionShape" type="CollisionShape" parent="pickarea"]
+shape = SubResource( 4 )
 [connection signal="body_entered" from="." to="." method="_body_entered"]
 [connection signal="body_exited" from="." to="." method="_body_exited"]
+[connection signal="body_entered" from="pickarea" to="." method="_body_entered"]
+[connection signal="body_exited" from="pickarea" to="." method="_body_exited"]

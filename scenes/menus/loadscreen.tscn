@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://textures/spacesky.png" type="Texture" id=1]
+
+[node name="loadscreen" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="progressbar" type="TextureProgress" parent="."]
+margin_left = 102.0
+margin_top = 512.0
+margin_right = 1182.0
+margin_bottom = 575.0
+value = 100.0
+texture_progress = ExtResource( 1 )
+nine_patch_stretch = true

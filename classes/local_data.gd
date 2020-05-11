@@ -1,4 +1,5 @@
 extends Node
+class_name localdata
 
 var frontkey: InputEvent
 var backkey: InputEvent
@@ -17,6 +18,8 @@ var modkey: InputEvent
 
 var music_vol: float = 1
 var sfx_vol: float = 1
+
+var spawnpt = Vector3(0,0,0)
 
 func storedata():
 	pass

@@ -10,7 +10,7 @@ func loadnext(player: Player):
 
 func activate(player: Player):
 	# add code for save game and/or additional menus here
-	player.pause = true
+	player.paused = true
 	self.loadnext(player)
 
 func _ready():
@@ -18,8 +18,8 @@ func _ready():
 	contacts_reported = 2
 	
 func _body_entered(body):
-	print(body.name)
 	if body.name == "player":
-		self.activate(body.get_parent())
+		print(nextscnpath)
+		get_tree().change_scene("res://scenes/levels/" + nextscnpath + ".tscn")
 
 

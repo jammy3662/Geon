@@ -1,27 +1,20 @@
 extends RigidBody
 class_name gsphere
 
-var orbradius: Area
-var pradius: Area
-
-var thisradius: Area
+export var polarity: int = 1
+var mesh = MeshInstance
 
 func _ready():
-	thisradius = $gradius
+	mesh = $mesh
+#	mesh.mesh.get("material").duplicate(true)
+#	if self.polarity == 1:
+#		var ms = mesh.mesh.get("material") as SpatialMaterial
+#		var newms = ms.duplicate(true)
+#		newms.albedo_color = Color(1,0,0)
+#		mesh.set("material", newms)
+#	if self.polarity == -1:
+#		var ms = mesh.mesh.get("material") as SpatialMaterial
+#		var newms = ms.duplicate(true)
+#		newms.albedo_color = Color(0,0,1)
+#		mesh.set("material", newms)
 	pass
-
-func _integrate_forces(state):
-	if pradius != null:
-		state.transform.origin = pradius.global_transform.origin
-	pass
-
-func _area_entered(area):
-	print(area.name)
-	if area.name == "oradius":
-		orbradius = area
-	if area.name == "pradius":
-		pradius = area
-
-
-func _area_exited(area):
-	pass # Replace with function body.
