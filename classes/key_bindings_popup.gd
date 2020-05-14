@@ -25,3 +25,7 @@ func _ready():
 	
 func _process(delta):
 	updatesliders()
+
+func popup_hide():
+	self.hide()
+	pass

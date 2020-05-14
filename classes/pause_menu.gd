@@ -19,7 +19,6 @@ func quit_pressed():
 	get_tree().paused = false
 	get_tree().change_scene("res://scenes/menus/titlescreen.tscn")
 
-
 func quit_cancel_pressed():
 	$panel/menu/confirm_panel.hide()
 
@@ -31,3 +30,16 @@ func options_pressed():
 
 func continue_pressed():
 	player.pause(false)
+
+func save_pressed():
+	$save_load.visible = true
+	$save_load/save.popup_centered()
+
+
+func load_pressed():
+	$save_load.visible = true
+	$save_load/load.popup_centered()
+
+func saveandquit_pressed():
+	$save_load/saveandquit.popup_centered()
+	pass

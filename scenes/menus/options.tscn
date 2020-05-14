@@ -57,5 +57,15 @@ __meta__ = {
 }
 
 [node name="options_menu" parent="." instance=ExtResource( 5 )]
+visible = false
+
+[node name="dimmer" parent="options_menu" index="1"]
+color = Color( 0, 0, 0, 0.713726 )
+
+[node name="sfxvol" parent="options_menu/TabContainer/Audio" index="0"]
+ticks_on_borders = true
+
+[node name="musicvol" parent="options_menu/TabContainer/Audio" index="1"]
+ticks_on_borders = true
 
 [editable path="options_menu"]

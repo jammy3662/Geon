@@ -28,7 +28,6 @@ var spawnpt: Vector3
 var lvl: Level
 var camera: Camera
 var gun: Spatial
-var orb: Orb
 var carrying: Spatial
 var pickarea: Area
 var pnlabel: Label
@@ -50,28 +49,33 @@ var gravity_state: bool = true
 var mousey: int
 
 func _ready():
-	local_data = get_node("/root/LocalData")
+	local_data = $"/root/LocalData"
+	local_data.emit_signal("scene_loaded")
 	self.lvl = get_parent() as Level
-	self.spawnpt = Vector3(lvl.spawnx, lvl.spawny, lvl.spawnz)
-	local_data.spawnpt = spawnpt
-	current_global_position = global_transform.origin
+	self.spawnpt = local_data.position3d
+	self.global_transform.origin = self.spawnpt
 	self.camera = $camera
 	self.gun = $camera/gun
-	self.orb = load("res://scenes/entities/orb.tscn").instance()
 	self.pickarea = $pickarea
 	self.pnlabel = $hud/pn
 	self.hud = $hud
 	self.pause_menu = $pause_menu
-	var pt = self.global_transform.origin
-	pt.y -= scale.y / 2
-	body_bottom = pt
 	contact_monitor = true
 	contacts_reported = 2
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	pass
 	
 
+func updateplayer():
+	local_data.polarity = self.polarity
+	local_data.position3d = self.global_transform.origin
+	local_data.inputvel = self.inputvel
+	local_data.gravity = self.gravity
+	local_data.vel = self.vel
+	local_data.lvl = self.lvl.filename
+
 func pause(p: bool):
+	if p: updateplayer()
 	if p: Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	else: 
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -86,13 +90,14 @@ func reparent(node: Node, new: Node):
 
 func respawn():
 	var path = lvl.filename
+	local_data.position3d = lvl.spawnpt
 	get_tree().change_scene(path)
 	
 func shootorb():
 	var basis = camera.global_transform.basis.z
-	var pt = -basis.normalized() * orb.transform.origin
-	var dir = pt - to_global(orb.global_transform.origin)
-	orb.shoot(dir, polarity)
+	#var pt = -basis.normalized() * orb.transform.origin
+	#var dir = pt - to_global(orb.global_transform.origin)
+	#orb.shoot(dir, polarity)
 	
 func callorb():
 	pass
@@ -138,10 +143,18 @@ func _body_entered(body):
 
 func inputvel():
 	if !pause:
-		inputvel = Vector3(0,0,0)
-		var form = camera.transform.basis
-		form.z.y *= 0
-		form.x.y *= 0
+		inputvel *= 0
+		var form = camera.transform.basis.orthonormalized()
+		# adjust vectors to compensate for vertical angle
+		form.z.z += -form.y.z
+		form.z.x += -form.y.x
+		form.x.x += form.x.y
+		form.x.z += form.x.y
+		# remove vertical component so player cannot 'fly'
+		form.z.y = 0
+		form.x.y = 0
+		# normalize vectors
+		form.z = form.z.normalized()
 		if Input.is_action_pressed("ui_up"):
 			inputvel += form.z
 		if Input.is_action_pressed("ui_down"):
@@ -151,9 +164,9 @@ func inputvel():
 		if Input.is_action_pressed("ui_right"):
 			inputvel -= form.x
 		inputvel *= inputspeed
-		if !Input.is_action_pressed("ui_up") and !Input.is_action_pressed("ui_down") and !Input.is_action_pressed("ui_left") and !Input.is_action_pressed("ui_right"):
-			inputvel.x = 0
-			inputvel.z = 0
+#		if !Input.is_action_pressed("ui_up") and !Input.is_action_pressed("ui_down") and !Input.is_action_pressed("ui_left") and !Input.is_action_pressed("ui_right"):
+#			inputvel.x *= 0.9
+#			inputvel.z *= 0.9
 			
 func gravity():
 	if gravity_state == true:
@@ -199,31 +212,27 @@ func _unhandled_input(event):
 	if event is InputEventKey:
 		if event.is_action_pressed("ui_pause"):
 			if !self.pause:
-				print("pause")
 				pause(true)
 				pass
 			else:
-				print("play")
 				pause(false)
 				pass
 
 func _integrate_forces(state):
-	if !pause:
-		if carrying != null:
-			var trans = camera.transform.basis.z
-			trans.y *= -1
-			carrying.translation = self.transform.origin + trans * 3
-			carrying.translation.y += camera.translation.y
-		global_position_delta = state.transform.origin - current_global_position
-		current_global_position = state.transform.origin
-		body_bottom = Vector3(self.global_transform.origin.z, self.global_transform.origin.y - self.scale.y / 2, self.global_transform.origin.z)
-		state.linear_velocity = inputvel + + gravity + vel
-		if current_global_position.y < lvl.deathplane:
-			respawn()
+	if carrying != null:
+		var trans = camera.transform.basis.z
+		trans.y *= -1
+		carrying.translation = self.transform.origin + trans * 3
+		carrying.translation.y += camera.translation.y
+	global_position_delta = state.transform.origin - current_global_position
+	current_global_position = state.transform.origin
+	body_bottom = Vector3(self.global_transform.origin.z, self.global_transform.origin.y - self.scale.y / 2, self.global_transform.origin.z)
+	state.linear_velocity = inputvel + + gravity + vel
+	if current_global_position.y < lvl.deathplane:
+		respawn()
 
 func _process(delta):
-	if !pause:
-		inputvel()
-		gravity()
+	inputvel()
+	gravity()
 	pass
 

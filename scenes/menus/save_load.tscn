@@ -1,0 +1,61 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://classes/save_load.gd" type="Script" id=1]
+
+[node name="save_load" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+script = ExtResource( 1 )
+
+[node name="load" type="FileDialog" parent="."]
+visible = true
+margin_left = 176.0
+margin_top = 120.0
+margin_right = 1096.0
+margin_bottom = 620.0
+mouse_filter = 1
+window_title = "Load existing save.."
+mode_overrides_title = false
+mode = 0
+access = 1
+show_hidden_files = false
+current_dir = "user://"
+current_file = "geon.save"
+current_path = "user://geon.save"
+
+[node name="save" type="FileDialog" parent="."]
+visible = true
+margin_left = 176.0
+margin_top = 120.0
+margin_right = 1096.0
+margin_bottom = 620.0
+mouse_filter = 1
+window_title = "Choose save location.."
+mode_overrides_title = false
+access = 1
+show_hidden_files = false
+current_dir = "user://"
+current_file = "geon.save"
+current_path = "user://geon.save"
+
+[node name="saveandquit" type="FileDialog" parent="."]
+visible = true
+margin_left = 176.0
+margin_top = 120.0
+margin_right = 1096.0
+margin_bottom = 620.0
+mouse_filter = 1
+window_title = "Choose save location.."
+mode_overrides_title = false
+access = 1
+show_hidden_files = false
+current_dir = "user://"
+current_file = "adsfsdfsddf.save"
+current_path = "user://adsfsdfsddf.save"
+[connection signal="file_selected" from="load" to="." method="load_file_selected"]
+[connection signal="popup_hide" from="load" to="." method="cancel"]
+[connection signal="file_selected" from="save" to="." method="save_file_selected"]
+[connection signal="popup_hide" from="save" to="." method="cancel"]
+[connection signal="file_selected" from="saveandquit" to="." method="saveandquit_file_selected"]
+[connection signal="popup_hide" from="saveandquit" to="." method="cancel"]

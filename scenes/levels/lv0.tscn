@@ -38,7 +38,6 @@ data = PoolVector3Array( 0.5, 0.058, -0.5179, 0.5, -0.0045, -0.5179, 0.5, 0.058,
 
 [node name="lv0" type="Spatial"]
 script = ExtResource( 1 )
-spawny = 4.0
 deathplane = -3.0
 
 [node name="player" parent="." instance=ExtResource( 2 )]
@@ -107,6 +106,7 @@ mesh = SubResource( 4 )
 material/0 = null
 
 [node name="monitor" type="RigidBody" parent="."]
+editor/display_folded = true
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -5.5, 4.28281, -3 )
 collision_layer = 32
 collision_mask = 3
