@@ -14,7 +14,9 @@ func _body_entered(body):
 			var scn = get_tree().current_scene
 			for node in scn.get_children():
 				if node is Door:
+					print(node)
 					var door = node as Door
+					print(door.id, " ",self.doorid)
 					if door.id == doorid:
 						door.update(1)
 	pass
@@ -26,7 +28,9 @@ func _body_exited(body):
 			var scn = get_tree().current_scene
 			for node in scn.get_children():
 				if node is Door:
+					print(node)
 					var door = node as Door
+					print(door.id, " ",self.doorid)
 					if door.id == doorid:
 						door.update(-1)
 	pass

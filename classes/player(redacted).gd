@@ -51,7 +51,7 @@ func _ready():
 	pass
 	
 func contactedorb():
-	print(pull)
+	#print(pull)
 	if pull == true:
 		pull = false
 		gravityaffected = true

@@ -39,6 +39,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://classes/player.gd"
 }, {
+"base": "MeshInstance",
+"class": "dynamicmesh",
+"language": "GDScript",
+"path": "res://classes/dynamicmesh.gd"
+}, {
 "base": "RigidBody",
 "class": "gplate",
 "language": "GDScript",
@@ -61,6 +66,7 @@ _global_script_class_icons={
 "Level": "",
 "Orb": "",
 "Player": "",
+"dynamicmesh": "",
 "gplate": "",
 "gsphere": "",
 "localdata": ""
@@ -81,6 +87,8 @@ LocalData="res://classes/local_data.gd"
 window/size/width=1280
 window/size/height=720
 window/size/resizable=false
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
 
 [editor_plugins]
 
@@ -136,13 +144,13 @@ ui_run={
 [layer_names]
 
 3d_physics/layer_1="player"
-3d_physics/layer_2="orb"
+3d_physics/layer_2="geon"
 3d_physics/layer_3="floor"
 3d_physics/layer_4="terrain"
 3d_physics/layer_5="hazard"
 3d_physics/layer_6="monitor"
 3d_physics/layer_7="gsurface"
-3d_physics/layer_8="ggun"
+3d_physics/layer_8="entities"
 3d_physics/layer_9="gsphere"
 3d_physics/layer_10="gplate"
 

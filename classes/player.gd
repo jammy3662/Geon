@@ -3,12 +3,6 @@ class_name Player
 
 var local_data: localdata
 
-# variables to track the orb
-var orbdist: Vector3
-var orbpt: Vector3
-var current_global_position: Vector3
-var global_position_delta: Vector3
-var body_bottom: Vector3
 # player's input motion
 var inputvel = Vector3(0,0,0)
 # point of gravity
@@ -16,7 +10,10 @@ var gravity = Vector3 (0,-1,0)
 # miscellaneous forces
 var vel = Vector3(0,0,0)
 
+var lastevent = InputEvent.new()
+
 var inputspeed: float = 14
+var maxinspeed: float = 14
 var gravityspeed: float = 13
 var miscspeed: float = 1
 var netspeed: float = 1
@@ -29,17 +26,21 @@ var lvl: Level
 var camera: Camera
 var gun: Spatial
 var carrying: Spatial
-var pickarea: Area
 var pnlabel: Label
 var hud: Control
 var pause_menu: Control
 var contacting: Array = []
 
+var fr = false
+var bc = false
+var lf = false
+var rt = false
+
 # current polarity:
 #  0 = no polarity (gun is off)
 #  -1, 1, = negative, positive
 var polarity: int = 0
-var pndir: int = 1
+var lastpn: int = 1
 
 var pause: bool = false
 var floored: bool = false
@@ -48,31 +49,33 @@ var gravity_state: bool = true
 # used for mouse tracking
 var mousey: int
 
+func pos():
+	return self.global_transform.origin
+
+func setpos(p: Vector3):
+	self.global_transform.origin = p
+
 func _ready():
 	local_data = $"/root/LocalData"
-	local_data.emit_signal("scene_loaded")
-	self.lvl = get_parent() as Level
-	self.spawnpt = local_data.position3d
-	self.global_transform.origin = self.spawnpt
-	self.camera = $camera
-	self.gun = $camera/gun
-	self.pickarea = $pickarea
-	self.pnlabel = $hud/pn
-	self.hud = $hud
-	self.pause_menu = $pause_menu
-	contact_monitor = true
-	contacts_reported = 2
+	self.emit_signal("scene_loaded")
+	lvl = get_parent() as Level
+	spawnpt = lvl.spawnpt
+	setpos(self.spawnpt)
+	camera = $camera
+	gun = $camera/gun
+	pnlabel = $hud/pn
+	hud = $hud
+	pause_menu = $pause_menu
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	pass
-	
 
 func updateplayer():
 	local_data.polarity = self.polarity
-	local_data.position3d = self.global_transform.origin
+	local_data.position3d = self.pos()
 	local_data.inputvel = self.inputvel
 	local_data.gravity = self.gravity
 	local_data.vel = self.vel
 	local_data.lvl = self.lvl.filename
+	local_data.rtn = self.rotation
 
 func pause(p: bool):
 	if p: updateplayer()
@@ -95,9 +98,8 @@ func respawn():
 	
 func shootorb():
 	var basis = camera.global_transform.basis.z
-	#var pt = -basis.normalized() * orb.transform.origin
-	#var dir = pt - to_global(orb.global_transform.origin)
-	#orb.shoot(dir, polarity)
+	var geon = load("res://scenes/entities/geon.tscn").instance() as RigidBody
+	geon.global_transform.origin = self.pos()
 	
 func callorb():
 	pass
@@ -108,92 +110,120 @@ func contactedorb():
 func jump():
 	if (floored or floored):
 		gravity.y = jumppower
-	
-func pnshift():
-	if carrying != null:
-		var b = carrying
-		call("_body_exited", b)
-		self.carrying = null
-	polarity += pndir
-	if polarity != 0:
-		pndir *= -1
-	pnlabel.text = "polarity: " + String(polarity)
-	#print("gun polarity: ", self.polarity)
-	pass
 
 func _body_exited(body):
-	#contacting.remove(contacting.find(body))
-	if body.name == "floor" or body.name.match("gplate*"):
-		floored = false
+	pass
 
 func _body_entered(body):
-	#contacting.append(body)
-	if body.name.match("gsphere*"):
-		var sp = body as gsphere
-		if sp.polarity == -self.polarity:
-			carrying = sp
 	if body.name == "orb":
 		contactedorb()
 		pass
-	if body.name.match("floor*") or body.name.match("gplate*"):
-		floored = true
 	if body.name == "hazard":
 		respawn()
 		pass
 
 func inputvel():
 	if !pause:
-		inputvel *= 0
-		var form = camera.transform.basis.orthonormalized()
-		# adjust vectors to compensate for vertical angle
-		form.z.z += -form.y.z
-		form.z.x += -form.y.x
-		form.x.x += form.x.y
-		form.x.z += form.x.y
-		# remove vertical component so player cannot 'fly'
-		form.z.y = 0
-		form.x.y = 0
-		# normalize vectors
-		form.z = form.z.normalized()
-		if Input.is_action_pressed("ui_up"):
-			inputvel += form.z
-		if Input.is_action_pressed("ui_down"):
-			inputvel -= form.z
-		if Input.is_action_pressed("ui_left"):
-			inputvel += form.x
-		if Input.is_action_pressed("ui_right"):
-			inputvel -= form.x
-		inputvel *= inputspeed
-#		if !Input.is_action_pressed("ui_up") and !Input.is_action_pressed("ui_down") and !Input.is_action_pressed("ui_left") and !Input.is_action_pressed("ui_right"):
-#			inputvel.x *= 0.9
-#			inputvel.z *= 0.9
-			
+		if lastevent != null:
+			inputvel *= 0
+			var form = camera.transform.basis.orthonormalized()
+			# adjust vectors to compensate for vertical angle
+			form.z.z += -form.y.z
+			form.z.x += -form.y.x
+			form.x.x += form.x.y
+			form.x.z += form.x.y
+			# remove vertical component so player cannot 'fly'
+			form.z.y = 0
+			form.x.y = 0
+			# normalize vectors
+			form.z = form.z.normalized()
+			if self.get("fr") == true:
+				inputvel += form.z
+			if self.get("bc") == true:
+				inputvel += -form.z
+			if self.get("lf") == true:
+				inputvel += form.x
+			if self.get("rt") == true:
+				inputvel += -form.x
+			inputvel *= inputspeed
+			inputvel.x = clamp(inputvel.x, -inputspeed, inputspeed)
+			inputvel.y = clamp(inputvel.y, -inputspeed, inputspeed)
+			inputvel.z = clamp(inputvel.z, -inputspeed, inputspeed)
+		
 func gravity():
-	if gravity_state == true:
+	if gravity_state == true and !floored:
 		if gravity.y > -max_fall_speed:
 			gravity.y -= gravityspeed / 10
 		gravity.y = clamp(gravity.y, -max_fall_speed, INF)
 	
+func floorcollision():
+	if $floorray.is_colliding():
+		self.floored = true
+	else:
+		self.floored = false
+		
+func pickobjects():
+	var pick = $camera/pickray
+	if pick.get_collider() != null:
+		var obj = pick.get_collider()
+		if obj.name.match("gsphere*"):
+			if obj.polarity == self.polarity * -1:
+				self.carrying = pick.get_collider()
+				
+func pnshift():
+	if carrying != null:
+		self.carrying = null
+	polarity *= -1
+	lastpn *= -1
+	pnlabel.text = "polarity: " + String(polarity)
+	pass
+
+func togglegun():
+	if carrying != null:
+		self.carrying = null
+	if self.polarity == 0:
+		self.polarity = self.lastpn
+	else:
+		self.polarity = 0
+	pnlabel.text = "polarity: " + String(self.polarity)
 
 func controls(event: InputEvent):
-	if event is InputEventMouseButton:
-		if event.button_index == 1 and event.pressed:
-			shootorb()
-			pass
-		if event.button_index == 2 and event.pressed:
-			pnshift()
-			pass
-	if event is InputEventKey:
-		if event.is_action_pressed("ui_a"):
-			jump()
-		if event.is_action_pressed("ui_run"):
-			pass
+	var dsc = event.as_text()
+	self.lastevent = event
+	var pressed = event.is_pressed()
+	if dsc.match(local_data.qsv+"*"):
+		print("saved")
+		updateplayer()
+		$hud/saved.visible = true
+		local_data.savegame("user://quicksave")
+	if dsc.match(local_data.qld+"*"):
+		print("loaded")
+		updateplayer()
+		local_data.loadgame("user://quicksave")
+	if dsc == local_data.fr:
+		self.set("fr", pressed)
+	if dsc == local_data.bc:
+		self.set("bc", pressed)
+	if dsc == local_data.lf:
+		self.set("lf", pressed)
+	if dsc == local_data.rt:
+		self.set("rt", pressed)
+	if event.is_pressed():
+		if dsc.match(local_data.pr+"*"):
+				shootorb()
+		if dsc.match(local_data.sc+"*"):
+				pnshift()
+		if dsc.match(local_data.mod+"*"):
+				jump()
+		if dsc.match("REPLACE WITH VARIABLE FOR RUN TO IMPLEMENT"):
+				pass
+		if dsc.match(local_data.pn+"*"):
+				togglegun()
 
 	if event is InputEventMouseMotion:
 		var mousesens: float = 0.008
 		# rotate the camera horizontally by the appropriate amount
 		camera.rotate_y(mousesens * -event.relative.x)
-		pickarea.rotate_y(mousesens * -event.relative.x)
 		# if camera vertical pan speed 'mousey' exceeds max speed, set it back to max speed
 		mousey = event.relative.y
 		var maxspeed = 22
@@ -220,19 +250,20 @@ func _unhandled_input(event):
 
 func _integrate_forces(state):
 	if carrying != null:
-		var trans = camera.transform.basis.z
-		trans.y *= -1
-		carrying.translation = self.transform.origin + trans * 3
-		carrying.translation.y += camera.translation.y
-	global_position_delta = state.transform.origin - current_global_position
-	current_global_position = state.transform.origin
-	body_bottom = Vector3(self.global_transform.origin.z, self.global_transform.origin.y - self.scale.y / 2, self.global_transform.origin.z)
-	state.linear_velocity = inputvel + + gravity + vel
-	if current_global_position.y < lvl.deathplane:
+		if !carrying.colliding:
+			var trans = camera.transform.basis.z * 3
+			trans.y *= -1
+			carrying.translation = self.pos() + trans
+			carrying.translation.y += camera.translation.y
+	var stateforce = (inputvel + gravity + vel)
+	state.linear_velocity = stateforce
+	if pos().y < lvl.deathplane:
 		respawn()
 
 func _process(delta):
 	inputvel()
 	gravity()
+	floorcollision()
+	pickobjects()
 	pass
 

@@ -3,4 +3,4 @@ extends Label
 func _gui_input(event):
 	if event is InputEventMouseButton:
 		if event.button_index == 1 and event.pressed:
-			get_tree().change_scene("res://scenes/levels/ttrl1.tscn")
+			get_tree().change_scene("res://scenes/levels/lvl01.tscn")

@@ -1,27 +1,17 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://classes/orb.gd" type="Script" id=1]
-[ext_resource path="res://particles/orb.material" type="Material" id=2]
-[ext_resource path="res://particles/orb_particle.tres" type="SphereMesh" id=3]
+[ext_resource path="res://scenes/entities/geon.tscn" type="PackedScene" id=2]
 
-[sub_resource type="SphereMesh" id=1]
-material = ExtResource( 2 )
+[sub_resource type="SpatialMaterial" id=1]
+
+[sub_resource type="SphereMesh" id=2]
+material = SubResource( 1 )
 radius = 0.1
 height = 0.2
 
-[sub_resource type="SphereShape" id=2]
+[sub_resource type="SphereShape" id=3]
 radius = 0.0529019
-
-[sub_resource type="ParticlesMaterial" id=3]
-emission_shape = 1
-emission_sphere_radius = 0.33
-gravity = Vector3( 0, 0, 0 )
-initial_velocity_random = 1.0
-angular_velocity = 0.120098
-angular_velocity_random = 1.0
-linear_accel_random = 1.0
-radial_accel_random = 1.0
-color = Color( 0, 1, 0, 1 )
 
 [sub_resource type="SphereShape" id=4]
 radius = 2.0
@@ -38,29 +28,17 @@ spawnpt = Vector3( 0.3, 0, 0.3 )
 
 [node name="mesh" type="MeshInstance" parent="."]
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
-mesh = SubResource( 1 )
+visible = false
+mesh = SubResource( 2 )
 material/0 = null
 
 [node name="shape" type="CollisionShape" parent="."]
-shape = SubResource( 2 )
-
-[node name="particles" type="Particles" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0151356, -0.0552192, -0.0362979 )
 visible = false
-emitting = false
-amount = 12
-lifetime = 0.05
-speed_scale = 10.0
-visibility_aabb = AABB( -0.33, -0.33, -0.33, 0.75, 0.75, 0.75 )
-process_material = SubResource( 3 )
-draw_passes = 4
-draw_pass_1 = ExtResource( 3 )
-draw_pass_2 = ExtResource( 3 )
-draw_pass_3 = ExtResource( 3 )
-draw_pass_4 = ExtResource( 3 )
+shape = SubResource( 3 )
+
+[node name="particles" parent="." instance=ExtResource( 2 )]
 
 [node name="oradius" type="Area" parent="."]
-visible = false
 collision_layer = 1024
 collision_mask = 1024
 
@@ -69,3 +47,5 @@ shape = SubResource( 4 )
 [connection signal="body_entered" from="." to="." method="_body_entered"]
 [connection signal="body_exited" from="." to="." method="_body_exited"]
 [connection signal="area_entered" from="oradius" to="." method="_area_entered"]
+
+[editable path="particles"]

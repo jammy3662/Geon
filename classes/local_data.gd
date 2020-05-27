@@ -1,26 +1,29 @@
 extends Node
 class_name localdata
 
-var frontkey: InputEvent
-var backkey: InputEvent
-var leftkey: InputEvent
-var rightkey: InputEvent
+var fr: String = "W"
+var bc: String = "S"
+var lf: String = "A"
+var rt: String = "D"
 
-var frontanalog: InputEvent
-var backanalog: InputEvent
-var leftanalog: InputEvent
-var rightanalog: InputEvent
+var pr: String = "InputEventMouseButton : button_index=BUTTON_LEFT"
+var sc: String = "InputEventMouseButton : button_index=BUTTON_RIGHT"
 
-var primarykey: InputEvent
-var secondarykey: InputEvent
+var mod: String = "Space"
+var pn: String = "E"
 
-var modkey: InputEvent
+var qsv: String = "0"
+var qld: String = "9"
 
-var music_vol: float = 1
+var mus_vol: float = 1
 var sfx_vol: float = 1
+
+var rsx = 1280
+var rsy = 720
 
 # player-related variables
 var position3d = Vector3(0,0,0)
+var rtn = Vector3(0,0,0)
 var polarity: int = 0
 var inputvel = Vector3(0,0,0)
 var gravity = Vector3(0,-1,0)
@@ -30,24 +33,18 @@ var lvl = "res://scenes/levels/ttrl1"
 func loadplayer():
 	get_tree().paused = false
 	get_tree().change_scene(self.lvl)
-	self.connect("scene_loaded", self, "loadplayer2")
-func loadplayer2():
-	var player = get_tree().current_scene.get_node("player")
+	var player = get_node("/player")
 	player.pause(false)
 	player.polarity = self.polarity
 	player.spawnpt = self.position3d
-	player.global_transform.origin = self.position3d
+	player.setpos(self.position3d)
 	player.inputvel = self.inputvel
 	player.gravity = self.gravity
 	player.vel = self.vel
-	print(self.inputvel, self.gravity, self.vel)
+	player.rotation = self.rtn
 
 func savegame(path):
 	var modpath = path.split("/")
-	for n in 3:
-		#modpath.remove(0)
-		pass
-	#var newpath = "user://"
 	var newpath = ""
 	var index = 0
 	for s in modpath:
@@ -55,11 +52,9 @@ func savegame(path):
 		if index == modpath.size():
 			newpath += s
 		else: newpath += s + "/"
-	print(newpath)
 	var file = File.new()
 	file.open(newpath, File.WRITE)
 	var data = savedict()
-	print(data)
 	file.store_line(to_json(data))
 	file.close()
 	
@@ -68,8 +63,6 @@ func loadgame(path: String):
 	if file.file_exists(path):
 		file.open(path, File.READ)
 		var data = parse_json(file.get_line())
-		music_vol = data["musicvol"]
-		sfx_vol = data["sfxvol"]
 		position3d.x = data["positionx"]
 		position3d.y = data["positiony"]
 		position3d.z = data["positionz"]
@@ -80,13 +73,47 @@ func loadgame(path: String):
 		lvl = data["lvl"]
 		file.close()
 
+func savecontrols():
+	var file = File.new()
+	file.open("user://config", File.WRITE)
+	var data = {
+		"fr": fr,
+		"bc": bc,
+		"lf": lf,
+		"rt": rt,
+		"mod": mod,
+		"pn": pn,
+		"pr": pr,
+		"sc": sc,
+		"qsv": qsv,
+		"qld": qld,
+		"mus_vol": mus_vol,
+		"sfx_vol": sfx_vol,
+		"rsx": rsx,
+		"rsy": rsy
+	}
+	file.store_line(to_json(data))
+	
+func loadcontrols():
+	var file = File.new()
+	if file.file_exists("user://config"):
+		file.open("user://config", File.READ)
+		var data = parse_json(file.get_line())
+		for key in data.keys():
+			var idx = data.keys().find(key)
+			var val = data.values()[idx]
+			var st = String(key)
+			self.set(st, val)
+		file.close()
+
 func savedict():
 	var dictionary = {
-		"musicvol" : music_vol,
-		"sfxvol" : sfx_vol,
 		"positionx" : position3d.x,
 		"positiony" : position3d.y,
 		"positionz" : position3d.z,
+		"rtx" : rtn.x,
+		"rty" : rtn.y,
+		"rtz" : rtn.z,
 		"polarity" : polarity,
 		"inputvelx" : inputvel.x,
 		"inputvely" : inputvel.y,
@@ -102,4 +129,4 @@ func savedict():
 	return dictionary
 
 func _ready():
-	pass
+	self.loadcontrols()

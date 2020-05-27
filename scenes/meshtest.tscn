@@ -1,0 +1,58 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://classes/dynamicmesh.gd" type="Script" id=1]
+[ext_resource path="res://textures/tiles/brown_light.png" type="Texture" id=2]
+[ext_resource path="res://textures/tiles/blacktile.png" type="Texture" id=3]
+
+[sub_resource type="SpatialMaterial" id=1]
+albedo_color = Color( 0.156863, 0.156863, 0.156863, 1 )
+
+[sub_resource type="PlaneMesh" id=2]
+material = SubResource( 1 )
+
+[sub_resource type="BoxShape" id=3]
+margin = 0.01
+extents = Vector3( 1, 0.01, 1 )
+
+[sub_resource type="SpatialMaterial" id=4]
+albedo_texture = ExtResource( 3 )
+uv1_scale = Vector3( 3, 5, 1 )
+
+[sub_resource type="PlaneMesh" id=5]
+material = SubResource( 4 )
+
+[sub_resource type="BoxShape" id=6]
+margin = 0.01
+extents = Vector3( 1, 0.01, 1 )
+
+[node name="meshtest" type="Spatial"]
+
+[node name="dynamicmesh" type="MeshInstance" parent="."]
+transform = Transform( 8, 0, 0, 0, 1, 0, 0, 0, 6, 0, 0, 0 )
+mesh = SubResource( 2 )
+material/0 = null
+script = ExtResource( 1 )
+texture = ExtResource( 2 )
+
+[node name="StaticBody" type="StaticBody" parent="dynamicmesh"]
+
+[node name="CollisionShape" type="CollisionShape" parent="dynamicmesh/StaticBody"]
+shape = SubResource( 3 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 3, 4 )
+fov = 80.0
+near = 0.01
+far = 300.0
+
+[node name="dynamicmesh2" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 4, 17 )
+mesh = SubResource( 5 )
+material/0 = null
+script = ExtResource( 1 )
+texture = ExtResource( 2 )
+
+[node name="StaticBody" type="StaticBody" parent="dynamicmesh2"]
+
+[node name="CollisionShape" type="CollisionShape" parent="dynamicmesh2/StaticBody"]
+shape = SubResource( 6 )

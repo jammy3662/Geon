@@ -1,12 +1,13 @@
 extends KinematicBody
 class_name Door
 
-var animator: AnimationPlayer
+var tween: Tween
 
 export var id: int = 1
 export var dir = Vector3(0,0,0)
 var power: int = 0
 export var count: int = 1
+var path: String
 var on: bool = false
 # stages
 #  0 = off
@@ -14,43 +15,42 @@ var on: bool = false
 #  2 = on
 var stage: int = 0
 
+func pos():
+	return self.global_transform.origin
+	
+func setpos(p: Vector3):
+	self.global_transform.origin = p
+
 func on():
 	on = true
-	animator.play("move")
+	path = String(self.get_path()) + ":translation"
+	tween.interpolate_property(self, NodePath(path), null, (pos() + dir), 1, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, 0)
 
 func off():
 	on = false
-	animator.play_backwards("move")
+	path = String(self.get_path()) + ":translation"
+	tween.interpolate_property(self, NodePath(path), null, (pos() - dir), 1, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, 0)
 
 func toggle():
 	if on:
 		off()
 	else:
 		on()
-		
-func setupanimation():
-	var ani = Animation.new()
-	var track = ani.add_track(Animation.TYPE_TRANSFORM)
-	var prpath = String(self.get_path()) + ":translation"
-	ani.track_set_path(track, prpath)
-	print(self.translation, dir, self.translation + dir)
-	ani.track_insert_key(track, 0, self.translation)
-	ani.track_insert_key(track, 1, self.translation + dir)
-	animator.add_animation("move", ani)
 	
 func update(n: int):
 	power += n
 	if power >= count:
 		on()
+		print("activated")
 	if power < count and on == true:
 		off()
-	print(on)
+		print("deactivated")
 
 func _ready():
-	animator = $AnimationPlayer
-	setupanimation()
+	path = String(self.get_path()) + ":translation"
+	print(path)
+	tween = $Tween
 	pass
 
 func _process(delta):
-	#print(self.translation)
 	pass

@@ -134,22 +134,12 @@ custom_fonts/font = SubResource( 4 )
 text = "Cancel"
 
 [node name="options_menu" parent="." instance=ExtResource( 3 )]
-editor/display_folded = true
-
-[node name="sfxvol" parent="options_menu/TabContainer/Audio" index="0"]
-ticks_on_borders = true
 
 [node name="save_load" parent="." instance=ExtResource( 4 )]
 visible = false
 
 [node name="load" parent="save_load" index="0"]
 window_title = "Open a File"
-
-[node name="fail" parent="save_load/save" index="8"]
-margin_left = 8.0
-margin_top = 8.0
-margin_right = 912.0
-margin_bottom = 464.0
 [connection signal="button_up" from="panel/continue" to="." method="continue_up"]
 [connection signal="pressed" from="panel/continue" to="." method="continue_pressed"]
 [connection signal="button_up" from="panel/options" to="." method="options_up"]
