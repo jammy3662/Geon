@@ -19,6 +19,7 @@ func _ready():
 	
 func _body_entered(body):
 	if body.name == "player":
-		get_tree().change_scene("res://scenes/levels/" + nextscnpath + ".tscn")
+		# move to next level
+		pass
 
 

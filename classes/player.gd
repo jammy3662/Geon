@@ -1,7 +1,7 @@
 extends RigidBody
 class_name Player
 
-var local_data: localdata
+var lcdat: localdata
 
 # player's input motion
 var inputvel = Vector3(0,0,0)
@@ -49,6 +49,34 @@ var gravity_state: bool = true
 # used for mouse tracking
 var mousey: int
 
+# Finds first node with matching property.
+# 'property' is the name of the property as a string NodePath.
+# 'value' is the value to test for.
+func find(property: String, value):
+	for c in self.get_parent().get_children():
+		if c.get(property) == value:
+			return c
+
+# Searches through node tree for first instance of node with matching name. Uses match() function to find.			
+func findobj(node: String):
+	var scn = get_node("/root/lvl_scn")
+	for c in scn.get_children():
+		print (c.name)
+		print (node)
+		if c.name.match(node):
+			print(c.name)
+			return c
+		else:
+			return null
+
+# Replaces property of named nodes with a given value.
+# 'obj' is the name of the node(s)
+func replace(obj: String, property: String, value):
+	var node = get_node("/root/lvl_scn/"+obj)
+	if node.get(property) != null:
+		print(node.get(property))
+	node.set(property, value)
+
 func pos():
 	return self.global_transform.origin
 
@@ -56,45 +84,36 @@ func setpos(p: Vector3):
 	self.global_transform.origin = p
 
 func _ready():
-	local_data = $"/root/LocalData"
-	self.emit_signal("scene_loaded")
-	lvl = get_parent() as Level
-	spawnpt = lvl.spawnpt
-	setpos(self.spawnpt)
+	lcdat = $"/root/LocalData"
 	camera = $camera
 	gun = $camera/gun
 	pnlabel = $hud/pn
 	hud = $hud
 	pause_menu = $pause_menu
+	lvl = findobj("lvl")
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func updateplayer():
-	local_data.polarity = self.polarity
-	local_data.position3d = self.pos()
-	local_data.inputvel = self.inputvel
-	local_data.gravity = self.gravity
-	local_data.vel = self.vel
-	local_data.lvl = self.lvl.filename
-	local_data.rtn = self.rotation
+	lcdat.polarity = self.polarity
+	lcdat.pos3 = self.pos()
+	lcdat.inputvel = self.inputvel
+	lcdat.gravity = self.gravity
+	lcdat.vel = self.vel
+	lcdat.rtn = self.rotation
 
 func pause(p: bool):
 	if p: updateplayer()
 	if p: Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	else: 
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	else: Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	get_tree().paused = p
 	pause_menu.visible = p
 	self.pause = p
 
-func reparent(node: Node, new: Node):
-	var par = node.get_parent()
-	par.remove_child(node)
-	new.add_child(node)
-
 func respawn():
 	var path = lvl.filename
-	local_data.position3d = lvl.spawnpt
-	get_tree().change_scene(path)
+	lcdat.pos3 = lvl.spawnpt
+	var crnt_lvl = findobj("lvl*")
+	crnt_lvl.replace_by()
 	
 func shootorb():
 	var basis = camera.global_transform.basis.z
@@ -191,33 +210,33 @@ func controls(event: InputEvent):
 	var dsc = event.as_text()
 	self.lastevent = event
 	var pressed = event.is_pressed()
-	if dsc.match(local_data.qsv+"*"):
+	if dsc.match(lcdat.qsv+"*"):
 		print("saved")
 		updateplayer()
 		$hud/saved.visible = true
-		local_data.savegame("user://quicksave")
-	if dsc.match(local_data.qld+"*"):
+		lcdat.savegame("user://quicksave")
+	if dsc.match(lcdat.qld+"*"):
 		print("loaded")
 		updateplayer()
-		local_data.loadgame("user://quicksave")
-	if dsc == local_data.fr:
+		lcdat.loadgame("user://quicksave")
+	if dsc == lcdat.fr:
 		self.set("fr", pressed)
-	if dsc == local_data.bc:
+	if dsc == lcdat.bc:
 		self.set("bc", pressed)
-	if dsc == local_data.lf:
+	if dsc == lcdat.lf:
 		self.set("lf", pressed)
-	if dsc == local_data.rt:
+	if dsc == lcdat.rt:
 		self.set("rt", pressed)
 	if event.is_pressed():
-		if dsc.match(local_data.pr+"*"):
+		if dsc.match(lcdat.pr+"*"):
 				shootorb()
-		if dsc.match(local_data.sc+"*"):
+		if dsc.match(lcdat.sc+"*"):
 				pnshift()
-		if dsc.match(local_data.mod+"*"):
+		if dsc.match(lcdat.mod+"*"):
 				jump()
 		if dsc.match("REPLACE WITH VARIABLE FOR RUN TO IMPLEMENT"):
 				pass
-		if dsc.match(local_data.pn+"*"):
+		if dsc.match(lcdat.pn+"*"):
 				togglegun()
 
 	if event is InputEventMouseMotion:
@@ -257,8 +276,8 @@ func _integrate_forces(state):
 			carrying.translation.y += camera.translation.y
 	var stateforce = (inputvel + gravity + vel)
 	state.linear_velocity = stateforce
-	if pos().y < lvl.deathplane:
-		respawn()
+#	if pos().y < lvl.deathplane:
+#		respawn()
 
 func _process(delta):
 	inputvel()

@@ -1,9 +1,11 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://classes/pause_menu.gd" type="Script" id=1]
 [ext_resource path="res://font/Andale Mono.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://scenes/menus/options_menu.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scenes/menus/save_load.tscn" type="PackedScene" id=4]
+[ext_resource path="res://classes/console.gd" type="Script" id=5]
+[ext_resource path="res://font/andale.tres" type="DynamicFont" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 36
@@ -31,12 +33,18 @@ script = ExtResource( 1 )
 margin_right = 1280.0
 margin_bottom = 720.0
 color = Color( 0, 0, 0, 0.823529 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="panel" type="Panel" parent="."]
-margin_left = 539.0
-margin_top = 201.0
-margin_right = 739.0
-margin_bottom = 521.0
+margin_left = 180.0
+margin_top = 196.0
+margin_right = 380.0
+margin_bottom = 516.0
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="pause_label" type="Label" parent="panel"]
 margin_left = 30.0
@@ -134,12 +142,185 @@ custom_fonts/font = SubResource( 4 )
 text = "Cancel"
 
 [node name="options_menu" parent="." instance=ExtResource( 3 )]
+editor/display_folded = true
+visible = false
 
 [node name="save_load" parent="." instance=ExtResource( 4 )]
 visible = false
 
 [node name="load" parent="save_load" index="0"]
 window_title = "Open a File"
+
+[node name="debug" type="Panel" parent="."]
+margin_left = 492.0
+margin_top = 116.0
+margin_right = 1152.0
+margin_bottom = 604.0
+script = ExtResource( 5 )
+
+[node name="bg" type="ColorRect" parent="debug"]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 652.0
+margin_bottom = 480.0
+color = Color( 0.0823529, 0.0823529, 0.0823529, 1 )
+
+[node name="output" type="ColorRect" parent="debug"]
+margin_left = 16.0
+margin_top = 13.0
+margin_right = 644.0
+margin_bottom = 441.0
+color = Color( 0.109804, 0.109804, 0.109804, 1 )
+
+[node name="lines" type="Control" parent="debug/output"]
+editor/display_folded = true
+margin_left = 6.0
+margin_top = 3.0
+margin_right = 622.0
+margin_bottom = 423.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="ln0" type="Label" parent="debug/output/lines"]
+margin_right = 628.0
+margin_bottom = 19.0
+custom_fonts/font = ExtResource( 6 )
+text = "0"
+
+[node name="ln1" type="Label" parent="debug/output/lines"]
+margin_top = 23.0
+margin_right = 628.0
+margin_bottom = 42.0
+custom_fonts/font = ExtResource( 6 )
+text = "1"
+
+[node name="ln2" type="Label" parent="debug/output/lines"]
+margin_top = 46.0
+margin_right = 628.0
+margin_bottom = 65.0
+custom_fonts/font = ExtResource( 6 )
+text = "2"
+
+[node name="ln3" type="Label" parent="debug/output/lines"]
+margin_top = 69.0
+margin_right = 628.0
+margin_bottom = 88.0
+custom_fonts/font = ExtResource( 6 )
+text = "3"
+
+[node name="ln4" type="Label" parent="debug/output/lines"]
+margin_top = 92.0
+margin_right = 628.0
+margin_bottom = 111.0
+custom_fonts/font = ExtResource( 6 )
+text = "4"
+
+[node name="ln5" type="Label" parent="debug/output/lines"]
+margin_top = 115.0
+margin_right = 628.0
+margin_bottom = 134.0
+custom_fonts/font = ExtResource( 6 )
+text = "5"
+
+[node name="ln6" type="Label" parent="debug/output/lines"]
+margin_top = 138.0
+margin_right = 628.0
+margin_bottom = 157.0
+custom_fonts/font = ExtResource( 6 )
+text = "6"
+
+[node name="ln7" type="Label" parent="debug/output/lines"]
+margin_top = 161.0
+margin_right = 628.0
+margin_bottom = 180.0
+custom_fonts/font = ExtResource( 6 )
+text = "7"
+
+[node name="ln8" type="Label" parent="debug/output/lines"]
+margin_top = 184.0
+margin_right = 628.0
+margin_bottom = 203.0
+custom_fonts/font = ExtResource( 6 )
+text = "8"
+
+[node name="ln9" type="Label" parent="debug/output/lines"]
+margin_top = 207.0
+margin_right = 628.0
+margin_bottom = 226.0
+custom_fonts/font = ExtResource( 6 )
+text = "9"
+
+[node name="ln10" type="Label" parent="debug/output/lines"]
+margin_top = 230.0
+margin_right = 628.0
+margin_bottom = 249.0
+custom_fonts/font = ExtResource( 6 )
+text = "10"
+
+[node name="ln11" type="Label" parent="debug/output/lines"]
+margin_top = 253.0
+margin_right = 628.0
+margin_bottom = 272.0
+custom_fonts/font = ExtResource( 6 )
+text = "11"
+
+[node name="ln12" type="Label" parent="debug/output/lines"]
+margin_top = 276.0
+margin_right = 628.0
+margin_bottom = 295.0
+custom_fonts/font = ExtResource( 6 )
+text = "12"
+
+[node name="ln13" type="Label" parent="debug/output/lines"]
+margin_top = 299.0
+margin_right = 628.0
+margin_bottom = 318.0
+custom_fonts/font = ExtResource( 6 )
+text = "13"
+
+[node name="ln14" type="Label" parent="debug/output/lines"]
+margin_top = 322.0
+margin_right = 628.0
+margin_bottom = 341.0
+custom_fonts/font = ExtResource( 6 )
+text = "14"
+
+[node name="ln15" type="Label" parent="debug/output/lines"]
+margin_top = 345.0
+margin_right = 628.0
+margin_bottom = 364.0
+custom_fonts/font = ExtResource( 6 )
+text = "15"
+
+[node name="ln16" type="Label" parent="debug/output/lines"]
+margin_top = 368.0
+margin_right = 628.0
+margin_bottom = 387.0
+custom_fonts/font = ExtResource( 6 )
+text = "16"
+
+[node name="ln17" type="Label" parent="debug/output/lines"]
+margin_top = 391.0
+margin_right = 628.0
+margin_bottom = 410.0
+custom_fonts/font = ExtResource( 6 )
+text = "17"
+
+[node name="prompt" type="Label" parent="debug"]
+visible = false
+margin_left = 30.0
+margin_top = 453.0
+margin_right = 50.0
+margin_bottom = 467.0
+text = ">>"
+
+[node name="cmd" type="LineEdit" parent="debug"]
+margin_left = 20.0
+margin_top = 448.0
+margin_right = 640.0
+margin_bottom = 472.0
+placeholder_text = " >> enter command"
 [connection signal="button_up" from="panel/continue" to="." method="continue_up"]
 [connection signal="pressed" from="panel/continue" to="." method="continue_pressed"]
 [connection signal="button_up" from="panel/options" to="." method="options_up"]

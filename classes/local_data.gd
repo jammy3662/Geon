@@ -22,7 +22,7 @@ var rsx = 1280
 var rsy = 720
 
 # player-related variables
-var position3d = Vector3(0,0,0)
+var pos3 = Vector3(0,0,0)
 var rtn = Vector3(0,0,0)
 var polarity: int = 0
 var inputvel = Vector3(0,0,0)
@@ -32,8 +32,8 @@ var lvl = "res://scenes/levels/ttrl1"
 
 func loadplayer():
 	get_tree().paused = false
-	get_tree().change_scene(self.lvl)
-	var player = get_node("/player")
+	var player = get_node("*/player")
+	yield()
 	player.pause(false)
 	player.polarity = self.polarity
 	player.spawnpt = self.position3d
@@ -63,9 +63,9 @@ func loadgame(path: String):
 	if file.file_exists(path):
 		file.open(path, File.READ)
 		var data = parse_json(file.get_line())
-		position3d.x = data["positionx"]
-		position3d.y = data["positiony"]
-		position3d.z = data["positionz"]
+		pos3.x = data["positionx"]
+		pos3.y = data["positiony"]
+		pos3.z = data["positionz"]
 		polarity = data["polarity"]
 		inputvel = Vector3(data["inputvelx"],data["inputvely"],data["inputvelz"])
 		gravity = Vector3(data["gravityx"],data["gravityy"],data["gravityz"])
@@ -108,9 +108,9 @@ func loadcontrols():
 
 func savedict():
 	var dictionary = {
-		"positionx" : position3d.x,
-		"positiony" : position3d.y,
-		"positionz" : position3d.z,
+		"positionx" : pos3.x,
+		"positiony" : pos3.y,
+		"positionz" : pos3.z,
 		"rtx" : rtn.x,
 		"rty" : rtn.y,
 		"rtz" : rtn.z,

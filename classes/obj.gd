@@ -1,4 +1,4 @@
-extends Level
+extends Object
 
 func _ready():
 	pass

@@ -13,11 +13,11 @@ friction = 0.0
 size = 29
 font_data = ExtResource( 3 )
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=3]
 size = 32
 font_data = ExtResource( 3 )
 
-[sub_resource type="BoxShape" id=3]
+[sub_resource type="BoxShape" id=4]
 margin = 0.001
 extents = Vector3( 0.7, 1.7, 0.7 )
 
@@ -70,7 +70,7 @@ margin_left = 16.0
 margin_top = 1.0
 margin_right = 158.0
 margin_bottom = 38.0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 3 )
 text = "Saved.."
 
 [node name="pause_menu" parent="." instance=ExtResource( 4 )]
@@ -92,7 +92,7 @@ collision_mask = 1048575
 
 [node name="colshape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, -1.42109e-14, 0, 1, 0, 1.42109e-14, 0, 1, 0, 0, 0 )
-shape = SubResource( 3 )
+shape = SubResource( 4 )
 
 [node name="floorray" type="RayCast" parent="."]
 enabled = true
